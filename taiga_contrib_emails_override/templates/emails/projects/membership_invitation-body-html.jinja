@@ -1,0 +1,26 @@
+{% extends "emails/hero-body-html.jinja" %}
+
+{% if membership.invited_by %}
+    {% set sender_full_name=membership.invited_by.get_full_name() %}
+{% else %}
+    {% set sender_full_name=_("someone") %}
+{% endif %}
+
+
+{% block body %}
+    {% trans full_name=sender_full_name, project=membership.project %}
+    <h2>You have been invited to Calendar.ly!</h2>
+<p>Hi! {{ full_name }} has sent you an invitation to join project <em>{{ project }}</em> in Calendar.ly.</br> Calendar.ly is a Content Calendar Tool in the cloud which will streamline your content creation initiatives.</p>
+    {% endtrans %}
+
+    {% if membership.invitation_extra_text %}
+        {% trans extra=membership.invitation_extra_text|linebreaksbr %}
+    <p><small>The person who invited you have something to say as well!:</small></p>
+    <p><strong>{{ extra }}</strong></p>
+        {% endtrans %}
+    {% endif %}
+
+    <a class="button" href="{{ resolve_front_url("invitation", membership.token) }}"
+       title="{{ _("Accept your invitation to Calendar.ly") }}">{{ _("Accept your invitation") }}</a>
+    <p><small>{{ _("The Calendar.ly Team") }}</small></p>
+{% endblock %}
